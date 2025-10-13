@@ -24,6 +24,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'e_llm_ros = llm_action_generator.llm_ros:main',
+            'e_llm_client_with_vlm = llm_action_generator.llm_client_with_vlm:main',
         ],
     },
 )
