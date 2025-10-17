@@ -1,4 +1,6 @@
 from setuptools import find_packages, setup
+from glob import glob
+import os
 
 package_name = 'llm_action_generator'
 
@@ -10,6 +12,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'launch'), glob('launch/*.py')),
+        (os.path.join('share', package_name, 'config'), glob('config/*.yaml'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -26,6 +30,9 @@ setup(
         'console_scripts': [
             'e_llm_ros = llm_action_generator.llm_ros:main',
             'e_llm_client_with_vlm = llm_action_generator.llm_client_with_vlm:main',
+            'e_llm_sub = llm_action_generator.llm_sub:main',
+            'e_llm_client = llm_action_generator.llm_client:main',
+
         ],
     },
 )

@@ -36,6 +36,7 @@ class LLMClientNode(Node):
         prompt_lower = self.user_prompt.lower()
         target_object = None
         place_location = None
+        mode_type = "1"
 
         # Detect target object from prompt
         for obj in self.latest_scene.get("detections", []):
@@ -76,7 +77,13 @@ class LLMClientNode(Node):
                 else:
                     prompt_text += "No place location specified; stay after grasp.\n"
 
-                prompt_text += "Provide actions in a single line step-by-step sequence like: 1)move to object {target_object}' at pose x={pose}. 2) grasp object {target_object}' at pose {pose}, 3)move to place object object {target_object}' at pose {placepose}, 4)release,  5)return to initial home pose if mentioned."
+                prompt_text += f"Provide a concise step-by-step sequence of robot actions like: 1. Move to position at x={pose.get('x',0):.2f}, y={pose.get('y',0):.2f}, z={pose.get('z',0):.2f}. \n 2. Close gripper in mode {mode_type}. \n 3. Move to position x={coords[0]}, y={coords[1]}, z={coords[2]}. \n 4. Open gripper. \n 5. Return to home pose."
+                prompt_text+=f" \ndo not repeat the prompt text."
+                """prompt_text += (
+                    "Provide a concise step-by-step sequence of robot actions "
+                    "in the format: move to object, grasp, move to place, release, and return to home. "
+                    "Use the given poses in the actions, without repeating the prompt text or adding '### Output'."
+                )"""
 
                 self.get_logger().info(f"Sending action-style prompt to LLM:\n{prompt_text}")
 
